@@ -14,37 +14,19 @@ suspend fun main() {
         .collect { println(it) }
     println("Done")
 
-    current<Int> {
-        emit(1)
-        delay(1_000)
-        emit(1)
-        delay(1_000)
-        emit(1)
-        emit(1)
-        emit(1)
-        delay(1_000)
-        emit(1)
+    current<String> {
+        emit("a")
+        delay(10)
+        emit("b")
+        emit("c")
+        delay(101)
+        emit("d")
+        delay(20)
+        emit("e")
+        delay(101)
+        emit("f")
+        delay(101)
     }
-        .collect { println(it) }
-
-    val flow = currentOf(1, 2).onEach { delay(10) }
-    val flow2 = currentOf("a", "b", "c").onEach { delay(15) }
-    combine(flow, flow2) { i, s -> i.toString() + s }
-        .filter { !it.endsWith("b") }
-        .collect { println(it) /* Will print "1a 2a 2c" */ }
-
-
-    ticker(1000, 100)
-        .take(10)
-        .collect { println(it) }
-
-    coroutineScope {
-        val job = ticker(1000, 100)
-            .take(10)
-            .onEach { println(it) }
-            .launchIn(this)
-
-        delay(1500)
-        job.cancel()
-    }
+        .buffer(2)
+        .collect { println(it) } // [a, b, c], [d, e], [f]
 }

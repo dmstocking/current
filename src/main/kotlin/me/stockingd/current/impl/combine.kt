@@ -19,19 +19,16 @@ internal class CurrentCombine<T, S>(
     override suspend fun collect(action: suspend (S) -> Unit) {
         val channel = Channel<Pair<Int, T>>()
         val mutableList = MutableList<Maybe<T>>(currents.size) { None() }
-        val counter = AtomicInteger(currents.size)
         coroutineScope {
             launch {
                 coroutineScope {
                     currents.forEachIndexed { index, current ->
                         launch {
                             current.collect { channel.send(index to it) }
-                            if (counter.decrementAndGet() == 0) {
-                                channel.close()
-                            }
                         }
                     }
                 }
+                channel.close()
             }
 
             var result = channel.receiveCatching()
