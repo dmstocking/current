@@ -5,29 +5,25 @@ import me.stockingd.current.Current
 
 private class AbortFlow: CancellationException()
 
-internal class CurrentTake<T>(private val parent: Current<T>, private val count: Int) : Current<T> {
-
-    override suspend fun collect(action: suspend (T) -> Unit) {
-        var count = this.count
-        try {
-            parent.collect {
-                if (count > 0) {
-                    action(it)
-                    count--
-                }
-
-                if (count <= 0) {
-                    throwExceptionToEscapeCollect()
-                }
+@Suppress("SwallowedException")
+fun <T> Current<T>.take(count: Int): Current<T> = current {
+    var needed = count
+    try {
+        collect {
+            if (needed > 0) {
+                emit(it)
+                needed--
             }
-        } catch (e: AbortFlow) {
-            // Ignore. Used just to stop parent from emitting values.
+
+            if (needed <= 0) {
+                throwExceptionToEscapeCollect()
+            }
         }
+    } catch (e: AbortFlow) {
+        // Ignore. Used just to stop parent from emitting values.
     }
 }
 
 private fun throwExceptionToEscapeCollect() {
     throw AbortFlow()
 }
-
-fun <T> Current<T>.take(count: Int): Current<T> = CurrentTake(this, count)
