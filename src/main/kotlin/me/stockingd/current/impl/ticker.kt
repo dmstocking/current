@@ -1,6 +1,5 @@
 package me.stockingd.current.impl
 
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import me.stockingd.current.Current
 
@@ -13,11 +12,7 @@ internal class CurrentTicker(private val initialDelay: Long, private val period:
         while (true) {
             delay(period)
             time += period
-            try {
-                action(time)
-            } catch (e: CancellationException) {
-                break
-            }
+            action(time)
         }
     }
 }
