@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import me.stockingd.current.Current
+import me.stockingd.current.collectIndexed
 
 fun <T> Current<T>.buffer(count: Int): Current<List<T>> = current {
     var items = mutableListOf<T>()
@@ -14,6 +15,19 @@ fun <T> Current<T>.buffer(count: Int): Current<List<T>> = current {
         if (items.size >= count) {
             emit(items)
             items = mutableListOf()
+        }
+    }
+}
+
+fun <T> Current<T>.buffer(count: Int, skip: Int): Current<List<T>> = current {
+    val buffers = mutableListOf<MutableList<T>>()
+    collectIndexed { i, value ->
+        if (i % skip == 0) {
+            buffers.add(ArrayList(count))
+        }
+        buffers.forEach { it.add(value) }
+        if (buffers[0].size >= count) {
+            emit(buffers.removeAt(0))
         }
     }
 }
