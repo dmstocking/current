@@ -3,7 +3,7 @@ package me.stockingd.current.impl
 import kotlinx.coroutines.CancellationException
 import me.stockingd.current.Current
 
-private class AbortFlow: CancellationException()
+private class AbortFlow : CancellationException()
 
 @Suppress("SwallowedException")
 fun <T> Current<T>.take(count: Int): Current<T> = current {

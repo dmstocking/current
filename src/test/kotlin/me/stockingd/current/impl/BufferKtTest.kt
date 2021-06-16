@@ -4,7 +4,6 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runBlockingTest
-import me.stockingd.current.Current
 
 internal class BufferKtTest : DescribeSpec({
 

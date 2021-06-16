@@ -1,12 +1,9 @@
 package me.stockingd.current.impl
 
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.be
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.jupiter.api.Assertions.*
 
 internal class MergeKtTest : DescribeSpec({
     describe("merge") {
