@@ -4,11 +4,10 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import me.stockingd.current.Current
+import me.stockingd.current.Maybe
+import me.stockingd.current.None
+import me.stockingd.current.Some
 import me.stockingd.current.current
-
-internal sealed class Maybe<T>
-internal class Some<T>(val value: T) : Maybe<T>()
-internal class None<T> : Maybe<T>()
 
 fun <T, S> combine(currents: List<Current<T>>, transform: suspend (List<T>) -> S): Current<S> = current {
     val channel = Channel<Pair<Int, T>>()
