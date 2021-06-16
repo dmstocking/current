@@ -27,7 +27,7 @@ internal class TickerKtTest : DescribeSpec({
             }
         }
 
-        it("should be able to have no initial delay befor ticking") {
+        it("should be able to have no initial delay before ticking") {
             runBlockingTest {
                 ticker(0, 2000)
                     .take(1)
