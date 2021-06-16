@@ -1,4 +1,4 @@
-package me.stockingd.current.impl
+package me.stockingd.current.operators
 
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe

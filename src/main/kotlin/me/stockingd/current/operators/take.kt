@@ -1,7 +1,8 @@
-package me.stockingd.current.impl
+package me.stockingd.current.operators
 
 import kotlinx.coroutines.CancellationException
 import me.stockingd.current.Current
+import me.stockingd.current.current
 
 private class AbortFlow : CancellationException()
 

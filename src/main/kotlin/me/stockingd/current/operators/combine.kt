@@ -1,9 +1,10 @@
-package me.stockingd.current.impl
+package me.stockingd.current.operators
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import me.stockingd.current.Current
+import me.stockingd.current.current
 
 internal sealed class Maybe<T>
 internal class Some<T>(val value: T) : Maybe<T>()

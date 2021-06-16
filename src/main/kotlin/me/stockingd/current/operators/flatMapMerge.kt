@@ -1,18 +1,19 @@
-package me.stockingd.current.impl
+package me.stockingd.current.operators
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import me.stockingd.current.Current
+import me.stockingd.current.current
 
-fun <T> merge(vararg currents: Current<T>): Current<T> = current {
-    val channel = Channel<T>()
+fun <T, S> Current<T>.flatMapMerge(transform: suspend (T) -> Current<S>): Current<S> = current {
+    val channel = Channel<S>()
     coroutineScope {
         launch {
             coroutineScope {
-                currents.forEach {
+                collect { incoming ->
                     launch {
-                        it.collect { channel.send(it) }
+                        transform(incoming).collect { channel.send(it) }
                     }
                 }
             }

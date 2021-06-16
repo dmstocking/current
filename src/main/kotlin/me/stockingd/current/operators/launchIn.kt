@@ -1,4 +1,4 @@
-package me.stockingd.current.impl
+package me.stockingd.current.operators
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

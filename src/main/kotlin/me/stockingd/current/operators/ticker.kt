@@ -1,7 +1,8 @@
-package me.stockingd.current.impl
+package me.stockingd.current.operators
 
 import kotlinx.coroutines.delay
 import me.stockingd.current.Current
+import me.stockingd.current.current
 
 fun ticker(initialDelay: Long, period: Long): Current<Long> = current {
     delay(initialDelay)

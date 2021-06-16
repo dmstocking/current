@@ -1,4 +1,4 @@
-package me.stockingd.current.impl
+package me.stockingd.current.operators
 
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -7,6 +7,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import me.stockingd.current.Current
 import me.stockingd.current.collectIndexed
+import me.stockingd.current.current
 
 fun <T> Current<T>.buffer(count: Int): Current<List<T>> = current {
     var items = mutableListOf<T>()
