@@ -9,12 +9,12 @@ internal class MergeKtTest : DescribeSpec({
     describe("merge") {
         it("should listen to all currents concurrently") {
             runBlockingTest {
-                merge(
-                    current<Int> {
+                merge<Int>(
+                    current {
                         delay(1000)
                         emit(2)
                     },
-                    current<Int> {
+                    current {
                         delay(500)
                         emit(1)
                     }
