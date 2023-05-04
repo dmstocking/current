@@ -2,7 +2,8 @@ package me.stockingd.current.operators
 
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.currentTime
+import kotlinx.coroutines.test.runTest
 import me.stockingd.current.currentOf
 
 internal class MapKtTest : DescribeSpec({
@@ -15,7 +16,7 @@ internal class MapKtTest : DescribeSpec({
         }
 
         it("should not introduce delays") {
-            runBlockingTest {
+            runTest {
                 currentOf(1, 2, 3)
                     .map { it.toString() }
                     .toList()

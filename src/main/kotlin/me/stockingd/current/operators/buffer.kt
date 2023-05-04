@@ -1,56 +1,25 @@
 package me.stockingd.current.operators
 
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import me.stockingd.current.Current
-import me.stockingd.current.collectIndexed
 import me.stockingd.current.current
 
-fun <T> Current<T>.buffer(count: Int): Current<List<T>> = current {
-    var items = mutableListOf<T>()
-    collect {
-        items.add(it)
-        if (items.size >= count) {
-            emit(items)
-            items = mutableListOf()
-        }
-    }
-}
-
-fun <T> Current<T>.buffer(count: Int, skip: Int): Current<List<T>> = current {
-    val buffers = mutableListOf<MutableList<T>>()
-    collectIndexed { i, value ->
-        if (i % skip == 0) {
-            buffers.add(ArrayList(count))
-        }
-        buffers.forEach { it.add(value) }
-        if (buffers[0].size >= count) {
-            emit(buffers.removeAt(0))
-        }
-    }
-}
-
-fun <T> Current<T>.buffer(period: Long): Current<List<T>> = current {
-    var items = mutableListOf<T>()
-    val mutex = Mutex()
+fun <T> Current<T>.buffer(count: Int): Current<T> = current {
+    val channel = Channel<T>(capacity = count)
     coroutineScope {
-        val job = launch {
-            while (true) {
-                delay(period)
-                mutex.withLock {
-                    emit(items.toList())
-                    items = mutableListOf()
-                }
+        launch {
+            var result = channel.receiveCatching()
+            while (result.isSuccess) {
+                emit(result.getOrThrow())
+                result = channel.receiveCatching()
             }
         }
+
         collect {
-            mutex.withLock {
-                items.add(it)
-            }
+            channel.send(it)
         }
-        job.cancel()
+        channel.close()
     }
 }
